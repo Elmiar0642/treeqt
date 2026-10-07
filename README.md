@@ -69,13 +69,31 @@ The maintained `PKGBUILD` and `.SRCINFO` are in `packaging/arch/`. The GitHub wo
 
 ### Gentoo
 
-The binary overlay lives under `packaging/gentoo/`, with package:
+TreeQt now has a standalone `gentoo-overlay` branch containing only the Portage overlay and proprietary license metadata.
 
-```text
-sys-fs/treeqt-bin
+Install it with:
+
+```bash
+sudo mkdir -p /var/db/repos
+sudo git clone --branch gentoo-overlay --single-branch \
+  https://github.com/Elmiar0642/treeqt.git \
+  /var/db/repos/treeqt
+
+sudo mkdir -p /etc/portage/repos.conf
+sudo tee /etc/portage/repos.conf/treeqt.conf >/dev/null <<'EOF'
+[treeqt]
+location = /var/db/repos/treeqt
+sync-type = git
+sync-uri = https://github.com/Elmiar0642/treeqt.git
+sync-git-clone-extra-opts = --branch gentoo-overlay --single-branch
+auto-sync = yes
+EOF
+
+sudo emaint sync --repo treeqt
+sudo emerge --ask sys-fs/treeqt-bin
 ```
 
-Clone this repository and use `packaging/gentoo/` as the local Portage repository path. The ebuild is pinned to the official TreeQt v0.1.1 binary release and uses `RESTRICT="mirror strip"` so Portage does not mirror or mutate the prebuilt payload.
+The ebuild is pinned to the official TreeQt v0.1.1 binary release and uses `RESTRICT="mirror strip"` so Portage does not mirror or mutate the prebuilt payload.
 
 ### Snap / Canonical
 
