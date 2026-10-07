@@ -1,2 +1,2 @@
-7dd60e994166427a9ac2403f9ea576876164b884d1a3be90477679e11dc8fa14  TreeQt-x86_64.AppImage
-bdf88c3113c4ff8eef7d5e05ac2b7200df2856bdcaccbd70e8953e061c9f8a8f  TreeQt-linux-x86_64.tar.gz
+c204d2dd59edc32194cd2a93dfd47ce506a8d34e79eddb4b18672d2927d9bed7  TreeQt-x86_64.AppImage
+ed8dc5fa2e6bb8b6bdb9b63f3e1d9dbbda554448f3ab2ff6fd93e9a4ed4998dd  TreeQt-linux-x86_64.tar.gz
