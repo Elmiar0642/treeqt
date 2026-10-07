@@ -1,0 +1,52 @@
+# SPDX-License-Identifier: 0BSD
+# Maintainer: ARIMA IMMANUEL <35724936+Elmiar0642 at users.noreply.github.com>
+
+pkgname=treeqt-bin
+pkgver=0.1.1
+pkgrel=1
+pkgdesc='Graphical filesystem tree editor (official prebuilt binary)'
+arch=('x86_64')
+url='https://github.com/Elmiar0642/treeqt'
+license=('LicenseRef-TreeQt-Proprietary')
+depends=('glibc')
+provides=('treeqt')
+conflicts=('treeqt')
+options=('!strip')
+
+source_x86_64=("TreeQt-linux-x86_64.tar.gz::https://github.com/Elmiar0642/treeqt/releases/download/v${pkgver}/TreeQt-linux-x86_64.tar.gz")
+sha256sums_x86_64=('0b91bca72bfff11a8ed95cfc4005aea279f06a831665d8158d28c2b4d77d9996')
+
+package() {
+    install -Dm755 "$srcdir/TreeQt-x86_64.AppImage" \
+        "$pkgdir/opt/treeqt/TreeQt.AppImage"
+
+    install -Dm644 "$srcdir/LICENSE.txt" \
+        "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+    install -Dm644 "$srcdir/THIRD_PARTY_NOTICES.md" \
+        "$pkgdir/usr/share/doc/$pkgname/THIRD_PARTY_NOTICES.md"
+    install -Dm644 "$srcdir/treeqt.svg" \
+        "$pkgdir/usr/share/icons/hicolor/scalable/apps/treeqt.svg"
+
+    install -d "$pkgdir/usr/bin"
+    cat > "$pkgdir/usr/bin/treeqt" <<'EOF'
+#!/bin/sh
+APP=/opt/treeqt/TreeQt.AppImage
+if command -v fusermount >/dev/null 2>&1 || command -v fusermount3 >/dev/null 2>&1; then
+    exec "$APP" "$@"
+fi
+APPIMAGE_EXTRACT_AND_RUN=1 exec "$APP" "$@"
+EOF
+    chmod 0755 "$pkgdir/usr/bin/treeqt"
+
+    install -d "$pkgdir/usr/share/applications"
+    cat > "$pkgdir/usr/share/applications/treeqt.desktop" <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=TreeQt
+Comment=Graphical filesystem tree editor
+Exec=treeqt
+Icon=treeqt
+Terminal=false
+Categories=Utility;FileTools;
+EOF
+}
