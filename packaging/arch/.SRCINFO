@@ -1,0 +1,15 @@
+pkgbase = treeqt-bin
+	pkgdesc = Graphical filesystem tree editor (official prebuilt binary)
+	pkgver = 0.1.1
+	pkgrel = 1
+	url = https://github.com/Elmiar0642/treeqt
+	arch = x86_64
+	license = LicenseRef-TreeQt-Proprietary
+	depends = glibc
+	provides = treeqt
+	conflicts = treeqt
+	options = !strip
+	source_x86_64 = TreeQt-linux-x86_64.tar.gz::https://github.com/Elmiar0642/treeqt/releases/download/v0.1.1/TreeQt-linux-x86_64.tar.gz
+	sha256sums_x86_64 = 0b91bca72bfff11a8ed95cfc4005aea279f06a831665d8158d28c2b4d77d9996
+
+pkgname = treeqt-bin
