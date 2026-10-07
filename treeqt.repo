@@ -1,0 +1,7 @@
+[treeqt]
+name=TreeQt
+baseurl=https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/rpm/$basearch
+enabled=1
+gpgcheck=0
+repo_gpgcheck=1
+gpgkey=https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/treeqt-repo.asc

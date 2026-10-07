@@ -1,0 +1,16 @@
+Package: treeqt
+Version: 0.1.1
+Architecture: amd64
+Maintainer: ARIMA IMMANUEL
+Filename: pool/main/t/treeqt/treeqt_0.1.1_amd64.deb
+Size: 26001724
+MD5sum: 6d3e91fb2511d7cf693959abc7c464bc
+SHA1: 13370671b77f8eee500476879fed556c7f94f835
+SHA256: ec380aebff12117c42ef2c1cc5672e0ac20ff830fca4118beb1ebbd4a25167b3
+Section: utils
+Priority: optional
+Homepage: https://github.com/Elmiar0642/treeqt
+Description: Graphical filesystem tree editor
+ TreeQt scans a directory into a visual tree, lets users queue filesystem
+ operations, and applies them when Finish is pressed.
+
