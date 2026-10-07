@@ -1,0 +1,142 @@
+name: Publish signed APT and DNF repositories
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing public release tag, e.g. v0.1.1'
+        required: true
+        default: 'v0.1.1'
+
+permissions:
+  contents: write
+
+env:
+  TREEQT_GPG_PRIVATE_KEY_B64: ${{ secrets.TREEQT_GPG_PRIVATE_KEY_B64 }}
+  TREEQT_GPG_PASSPHRASE: ${{ secrets.TREEQT_GPG_PASSPHRASE }}
+
+jobs:
+  repository:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout public repository
+        uses: actions/checkout@v4
+
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            echo "tag=${{ github.event.release.tag_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Require repository signing key
+        shell: bash
+        run: |
+          if [[ -z "$TREEQT_GPG_PRIVATE_KEY_B64" ]]; then
+            echo "Missing repository secret TREEQT_GPG_PRIVATE_KEY_B64" >&2
+            exit 1
+          fi
+
+      - name: Install repository tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y apt-utils dpkg-dev createrepo-c gnupg
+
+      - name: Download DEB and RPM release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p incoming
+          gh release download "${{ steps.tag.outputs.tag }}" \
+            --repo "$GITHUB_REPOSITORY" \
+            --dir incoming \
+            --pattern '*.deb' \
+            --pattern '*.rpm'
+          test -n "$(find incoming -maxdepth 1 -name '*.deb' -print -quit)"
+          test -n "$(find incoming -maxdepth 1 -name '*.rpm' -print -quit)"
+
+      - name: Import signing key
+        id: gpg
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.gnupg"
+          chmod 700 "$HOME/.gnupg"
+          echo "$TREEQT_GPG_PRIVATE_KEY_B64" | base64 -d | gpg --batch --import
+          KEYID="$(gpg --batch --with-colons --list-secret-keys | awk -F: '$1=="sec" {print $5; exit}')"
+          test -n "$KEYID"
+          echo "keyid=$KEYID" >> "$GITHUB_OUTPUT"
+
+      - name: Build signed APT repository
+        shell: bash
+        run: |
+          set -eux
+          mkdir -p site/apt/pool/main/t/treeqt
+          mkdir -p site/apt/dists/stable/main/binary-amd64
+          cp incoming/*.deb site/apt/pool/main/t/treeqt/
+          (
+            cd site/apt
+            dpkg-scanpackages --arch amd64 pool /dev/null > dists/stable/main/binary-amd64/Packages
+            gzip -9fk dists/stable/main/binary-amd64/Packages
+            apt-ftparchive release dists/stable > dists/stable/Release
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$TREEQT_GPG_PASSPHRASE" \
+              --local-user "${{ steps.gpg.outputs.keyid }}" \
+              --clearsign -o dists/stable/InRelease dists/stable/Release
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$TREEQT_GPG_PASSPHRASE" \
+              --local-user "${{ steps.gpg.outputs.keyid }}" \
+              --armor --detach-sign -o dists/stable/Release.gpg dists/stable/Release
+          )
+
+      - name: Build signed DNF repository metadata
+        shell: bash
+        run: |
+          set -eux
+          mkdir -p site/rpm/x86_64
+          cp incoming/*.rpm site/rpm/x86_64/
+          createrepo_c site/rpm/x86_64
+          gpg --batch --yes --pinentry-mode loopback \
+            --passphrase "$TREEQT_GPG_PASSPHRASE" \
+            --local-user "${{ steps.gpg.outputs.keyid }}" \
+            --armor --detach-sign site/rpm/x86_64/repodata/repomd.xml
+
+      - name: Export public signing key and client configuration
+        shell: bash
+        run: |
+          gpg --batch --armor --export "${{ steps.gpg.outputs.keyid }}" > site/treeqt-repo.asc
+          gpg --batch --export "${{ steps.gpg.outputs.keyid }}" > site/treeqt-repo.gpg
+          cat > site/treeqt.sources <<'EOF'
+          Types: deb
+          URIs: https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/apt
+          Suites: stable
+          Components: main
+          Architectures: amd64
+          Signed-By: /usr/share/keyrings/treeqt-repo.gpg
+          EOF
+          cat > site/treeqt.repo <<'EOF'
+          [treeqt]
+          name=TreeQt
+          baseurl=https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/rpm/$basearch
+          enabled=1
+          gpgcheck=0
+          repo_gpgcheck=1
+          gpgkey=https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/treeqt-repo.asc
+          EOF
+
+      - name: Publish package-repo branch
+        shell: bash
+        run: |
+          cp -a site /tmp/treeqt-package-site
+          git config user.name 'TreeQt Release Bot'
+          git config user.email '35724936+Elmiar0642@users.noreply.github.com'
+          git checkout --orphan package-repo
+          git rm -rf . || true
+          cp -a /tmp/treeqt-package-site/. .
+          git add -A
+          git commit -m "Publish package repositories for ${{ steps.tag.outputs.tag }}"
+          git push --force origin HEAD:package-repo
