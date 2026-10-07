@@ -1,0 +1,24 @@
+TREEQT PROPRIETARY LICENSE v1.1
+
+Copyright (C) 2026 ARIMA IMMANUEL. All rights reserved.
+
+1. Ownership
+TreeQt, excluding third-party components, is proprietary software owned by the copyright holder. No ownership right is transferred by downloading, installing, redistributing, or using TreeQt.
+
+2. Binary-use permission
+You are granted a personal, non-exclusive, non-transferable permission to download, install, and run unmodified official TreeQt binary releases for lawful personal or internal use.
+
+3. Unmodified binary redistribution permission
+You may redistribute byte-for-byte unmodified official TreeQt binary releases, and distribution-specific packages whose TreeQt application payload is an unmodified official TreeQt binary, provided that the TreeQt copyright notice, this license, THIRD_PARTY_NOTICES and all third-party license notices remain included and unmodified; no modified TreeQt application binary is distributed; and no source-code rights are implied.
+
+4. Restrictions
+Except for the permission above, where expressly permitted in writing by the copyright holder, or where required by applicable law, you may not copy or distribute TreeQt source code, modify TreeQt application binaries or source code, create derivative works from TreeQt source code, sublicense or sell a TreeQt software license, or redistribute unofficial modified TreeQt binaries.
+
+5. Third-party software
+Third-party components remain governed by their own licenses.
+
+6. No source-code grant
+Distribution does not grant access to or rights in the proprietary TreeQt application source code.
+
+7. Warranty disclaimer
+TREEQT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
