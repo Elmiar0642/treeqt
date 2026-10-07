@@ -1,24 +1,33 @@
-TREEQT PROPRIETARY LICENSE v1.0
+TREEQT PROPRIETARY LICENSE v1.1
 
 Copyright (C) 2026 ARIMA IMMANUEL. All rights reserved.
 
 1. Ownership
-TreeQt, excluding third-party components, is proprietary software owned by the copyright holder. No ownership right is transferred by downloading, installing, or using TreeQt.
+TreeQt, excluding third-party components, is proprietary software owned by the copyright holder. No ownership right is transferred by downloading, installing, redistributing, or using TreeQt.
 
 2. Binary-use permission
 You are granted a personal, non-exclusive, non-transferable permission to download, install, and run unmodified official TreeQt binary releases for lawful personal or internal use.
 
-3. Restrictions
-Except where expressly permitted in writing by the copyright holder or required by applicable law, you may not copy or distribute TreeQt source code, modify TreeQt, create derivative works from TreeQt source code, sublicense or sell TreeQt, or redistribute unofficial modified binaries.
+3. Unmodified binary redistribution permission
+You may redistribute byte-for-byte unmodified official TreeQt binary releases, and distribution-specific packages whose TreeQt application payload is an unmodified official TreeQt binary, provided that:
+(a) the TreeQt copyright notice and this license remain included and unmodified;
+(b) THIRD_PARTY_NOTICES and all third-party license notices shipped with the official release remain included and unmodified;
+(c) the package does not claim to be an official TreeQt release unless it was published by the copyright holder;
+(d) no fee is charged specifically for a TreeQt license, although reasonable media, hosting, repository, distribution, or service fees are permitted; and
+(e) the redistribution does not add modified TreeQt application binaries or imply transfer of TreeQt source-code rights.
+This clause is intended to permit normal distribution through Linux package repositories, mirrors, package recipes, and package-manager infrastructure while keeping the TreeQt application source proprietary.
 
-4. Third-party software
+4. Restrictions
+Except for the unmodified binary redistribution permission above, where expressly permitted in writing by the copyright holder, or where required by applicable law, you may not copy or distribute TreeQt source code, modify TreeQt application binaries or source code, create derivative works from TreeQt source code, sublicense or sell a TreeQt software license, or redistribute unofficial modified TreeQt binaries.
+
+5. Third-party software
 TreeQt may use third-party software, including Qt. Third-party components remain governed by their own licenses. Nothing in this license restricts rights that a third-party open-source license requires be preserved, including any rights necessary to debug modifications to or replace LGPL-covered libraries.
 
-5. No source-code grant
-Distribution of an official TreeQt executable does not grant access to, or a license to copy, the proprietary TreeQt application source code except where separately agreed in writing.
+6. No source-code grant
+Distribution of an official TreeQt executable or distribution-specific package does not grant access to, or a license to copy, the proprietary TreeQt application source code except where separately agreed in writing.
 
-6. Warranty disclaimer
+7. Warranty disclaimer
 TREEQT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COPYRIGHT HOLDER IS NOT LIABLE FOR DAMAGES ARISING FROM USE OF TREEQT.
 
-7. Other permissions
-For redistribution, commercial licensing, source access, modification rights, or other permissions, contact the copyright holder through the official TreeQt repository.
+8. Other permissions
+For commercial licensing, source access, modification rights, modified-binary redistribution, or other permissions not granted above, contact the copyright holder through the official TreeQt repository.
