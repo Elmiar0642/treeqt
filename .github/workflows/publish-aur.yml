@@ -18,15 +18,19 @@ jobs:
       - name: Checkout public TreeQt repository
         uses: actions/checkout@v4
 
-      - name: Require AUR SSH key
+      - name: Detect AUR credentials
+        id: gate
         shell: bash
         run: |
-          if [[ -z "$AUR_SSH_PRIVATE_KEY" ]]; then
-            echo "Missing repository secret AUR_SSH_PRIVATE_KEY" >&2
-            exit 1
+          if [[ -n "$AUR_SSH_PRIVATE_KEY" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "AUR_SSH_PRIVATE_KEY is not configured; skipping AUR publication."
           fi
 
       - name: Configure AUR SSH access
+        if: steps.gate.outputs.configured == 'true'
         shell: bash
         run: |
           mkdir -p "$HOME/.ssh"
@@ -43,6 +47,7 @@ jobs:
           chmod 600 "$HOME/.ssh/config"
 
       - name: Publish AUR recipe
+        if: steps.gate.outputs.configured == 'true'
         shell: bash
         run: |
           git clone ssh://aur@aur.archlinux.org/treeqt-bin.git aur-treeqt-bin
