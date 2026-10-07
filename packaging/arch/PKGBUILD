@@ -14,7 +14,7 @@ conflicts=('treeqt')
 options=('!strip')
 
 source_x86_64=("TreeQt-linux-x86_64.tar.gz::https://github.com/Elmiar0642/treeqt/releases/download/v${pkgver}/TreeQt-linux-x86_64.tar.gz")
-sha256sums_x86_64=('0b91bca72bfff11a8ed95cfc4005aea279f06a831665d8158d28c2b4d77d9996')
+sha256sums_x86_64=('713b392e3543036fa6d1d83eae1e2d61c5bbaac64508bfd45abdb028c6e303d0')
 
 package() {
     install -Dm755 "$srcdir/TreeQt-x86_64.AppImage" \
