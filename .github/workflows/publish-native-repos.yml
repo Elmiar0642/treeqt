@@ -74,7 +74,7 @@ jobs:
       - name: Build signed APT repository
         shell: bash
         run: |
-          set -eux
+          set -euo pipefail
           mkdir -p site/apt/pool/main/t/treeqt
           mkdir -p site/apt/dists/stable/main/binary-amd64
           cp incoming/*.deb site/apt/pool/main/t/treeqt/
@@ -96,7 +96,7 @@ jobs:
       - name: Build signed DNF repository metadata
         shell: bash
         run: |
-          set -eux
+          set -euo pipefail
           mkdir -p site/rpm/x86_64
           cp incoming/*.rpm site/rpm/x86_64/
           createrepo_c site/rpm/x86_64
