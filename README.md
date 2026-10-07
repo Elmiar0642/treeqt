@@ -45,7 +45,19 @@ Download the release `.deb` and install it with:
 sudo apt install ./treeqt_0.1.1_amd64.deb
 ```
 
-A signed APT repository workflow is included under `.github/workflows/publish-native-repos.yml`. Once the repository signing secrets are configured and the `package-repo` branch has been published, `packaging/apt/install-repository.sh` installs the repository and TreeQt.
+The signed APT repository is published on the `package-repo` branch. Add it once on an amd64 Ubuntu/Debian system, then search or install normally:
+
+```bash
+sudo apt install curl ca-certificates
+curl -fsSL https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/treeqt-repo.gpg | sudo tee /usr/share/keyrings/treeqt-repo.gpg >/dev/null
+curl -fsSL https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/treeqt.sources | sudo tee /etc/apt/sources.list.d/treeqt.sources >/dev/null
+sudo chmod 644 /usr/share/keyrings/treeqt-repo.gpg /etc/apt/sources.list.d/treeqt.sources
+sudo apt update
+apt search '^treeqt$'
+sudo apt install treeqt
+```
+
+This is the TreeQt publisher's repository. TreeQt is not currently included in Ubuntu's or Debian's default package archives.
 
 ### Fedora / RHEL
 
@@ -55,17 +67,26 @@ Download the release `.rpm` and install it with:
 sudo dnf install ./treeqt-0.1.1-1.x86_64.rpm
 ```
 
-The same signed repository workflow generates DNF repository metadata. After the `package-repo` branch is published, `packaging/dnf/install-repository.sh` configures it.
+The DNF repository is published with signed repository metadata. Configure it once, then install normally:
+
+```bash
+sudo curl -fsSL https://raw.githubusercontent.com/Elmiar0642/treeqt/package-repo/treeqt.repo -o /etc/yum.repos.d/treeqt.repo
+sudo chmod 644 /etc/yum.repos.d/treeqt.repo
+sudo dnf clean metadata
+sudo dnf install treeqt
+```
+
+The repository verifies metadata signatures (`repo_gpgcheck=1`). Individual RPM signatures are not yet provided. TreeQt is not currently included in Fedora's default repositories.
 
 ### Arch Linux / AUR
 
-The AUR package is designed as:
+AUR publication is pending registration of the publisher's dedicated SSH public key. After successful publication, the intended installation command is:
 
 ```bash
 yay -S treeqt-bin
 ```
 
-The maintained `PKGBUILD` and `.SRCINFO` are in `packaging/arch/`. The GitHub workflow `publish-aur.yml` can publish them to AUR after the repository secret `AUR_SSH_PRIVATE_KEY` is configured.
+The maintained `PKGBUILD` and `.SRCINFO` are in `packaging/arch/`. The GitHub workflow `publish-aur.yml` has its `AUR_SSH_PRIVATE_KEY` configured. The matching public key must also be registered in the maintainer's AUR account before publication succeeds.
 
 ### Gentoo
 
@@ -97,7 +118,7 @@ The ebuild is pinned to the official TreeQt v0.1.1 binary release and uses `REST
 
 ### Snap / Canonical
 
-TreeQt has a private-source Snapcraft recipe and GitHub workflow. Because TreeQt needs broad filesystem access, the snap uses **classic confinement**. Canonical requires review before a classic snap can be released publicly. Once Snap Store credentials are configured in the private repository as `SNAPCRAFT_STORE_CREDENTIALS`, the workflow can publish to a selected channel.
+TreeQt has a private-source Snapcraft recipe and GitHub workflow. Snap Store publication is pending publisher sign-in, name registration, store credentials, and confinement review. Because TreeQt needs broad filesystem access, the snap uses **classic confinement**. Canonical requires review before a classic snap can be released publicly. Once Snap Store credentials are configured in the private repository as `SNAPCRAFT_STORE_CREDENTIALS`, the workflow can publish to a selected channel.
 
 ## Release integrity
 
